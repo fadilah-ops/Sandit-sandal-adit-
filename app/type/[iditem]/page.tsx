@@ -1,22 +1,22 @@
 'use client';
 
 import React, { useState, useEffect} from 'react';
-import Navbar from './Navbar';
+import { useParams } from 'next/navigation';
+import Navbar from '@/app/Navbar';
 import Image from 'next/image';
-import './Banner.css';
-import ProductCard from './cart';
+import '@/app/banner.css'
+import ProductCard from '@/app/cart';
 import { GiSlippers } from "react-icons/gi";
-import { FaFacebook, FaInstagram } from "react-icons/fa";
-
 export default function Home() {
+  const params = useParams();
+  const type = params.iditem;
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [fetchdata, setfetchdata] = useState<fetch[]>([]);
   const images = [
     '/Banner-W.jpg',
-    '/pin.jpg',
+    '/Banner.Webp',
     '/gambar1 (2).jpeg',
     '/normal.jpg',
-    '/bo.jpeg',
   ];
 
   interface fetch{
@@ -30,7 +30,7 @@ export default function Home() {
   }
   const fetchData = async () => {
     try {
-      const response = await fetch('http://localhost:8000/data');
+      const response = await fetch(`http://localhost:8000/data/type/${type}`);
       const result = await response.json();
       setfetchdata(result);
       console.log(response);
@@ -47,7 +47,7 @@ export default function Home() {
   useEffect(() => {
     const intervalId = setInterval(() => {
       setCurrentImageIndex((prevIndex) => (prevIndex + 1) % images.length);
-    }, 5000);
+    }, 2000);
 
     // Cleanup the interval on component unmount
     return () => clearInterval(intervalId);
@@ -58,7 +58,6 @@ export default function Home() {
   return (<>
      <Navbar />
      <div className="relative h-80 w-full flex items-center justify-center text-center bg-gray-800">
-      {/* Gambar yang berubah */}
       <div className="absolute inset-0 w-2/4" id='banner'>
         <Image
           src={images[currentImageIndex]}
@@ -183,38 +182,17 @@ export default function Home() {
     </div>
   </div>
 </div>
-<div className="bg-orange-100 py-12" id="about">
-      <div className="max-w-4xl mx-auto text-center px-6">
-        <div className="text-xl font-semibold text-gray-800 flex items-center justify-center">
-          <h2 className="text-3xl font-bold text-gray-800 mb-4 flex items-center">
-            <GiSlippers className="mr-2" />
-            SANDIT
-          </h2>
-        </div>
-        <p className="text-gray-600 text-lg leading-relaxed">
-          "Sandit - Lebih dari Sekadar Sandal" Kami tidak hanya menjual sandal, kami menawarkan kenyamanan, kualitas, dan kepercayaan. Temukan produk terbaik dengan harga bersahabat untuk memenuhi kebutuhan gaya hidup Anda.
-        </p>
-        <div className="flex justify-center space-x-6 mt-6">
-          <a
-            href="https://www.facebook.com"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-gray-800 hover:text-blue-600 text-2xl"
-          >
-            <FaFacebook />
-          </a>
-          <a
-            href="https://www.instagram.com"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-gray-800 hover:text-pink-500 text-2xl"
-          >
-            <FaInstagram />
-          </a>
-        </div>
-      </div>
-    </div>
-
+<div className="bg-orange-100 py-12" id='about'>
+  <div className="max-w-4xl mx-auto text-center px-6">
+  <div className="text-xl font-semibold text-gray-800 flex items-center">
+  <h2 className="text-3xl font-bold text-gray-800 mb-4 flex"><GiSlippers/>SANDIT</h2>
+  </div>
+    <p className="text-gray-600 text-lg leading-relaxed">
+    "Sandit - Lebih dari Sekadar Sandal"
+    Kami tidak hanya menjual sandal, kami menawarkan kenyamanan, kualitas, dan kepercayaan. Temukan produk terbaik dengan harga bersahabat untuk memenuhi kebutuhan gaya hidup Anda.
+    </p>
+  </div>
+</div>
 
 
   </>);
